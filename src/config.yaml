@@ -1,0 +1,5 @@
+service:
+  postgres:
+    user_name: postgres
+    password: postgres
+    db_name: postgres

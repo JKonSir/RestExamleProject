@@ -1,18 +1,21 @@
 package main
 
 import (
-	"os"
 	"storage/postgres/support"
 	"app/rest"
 	"storage/postgres"
 	"services"
+	"app"
 )
 
 func main() {
+	conf := app.Conf{}
+	conf.ReadConfig()
+
 	pgDb := support.PostgresDB{}
-	pgDb.InitDB(os.Getenv("APP_DB_USERNAME"),
-		os.Getenv("APP_DB_PASSWORD"),
-		os.Getenv("APP_DB_NAME"))
+	pgDb.InitDB(conf.Service.Postgres.USERNAME,
+		conf.Service.Postgres.PASSWORD,
+		conf.Service.Postgres.DB_NAME)
 	productStorage := postgres.NewProductStorage(&pgDb)
 	productService := services.NewProductService(productStorage)
 
