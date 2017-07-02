@@ -2,15 +2,20 @@ package main
 
 import (
 	"os"
-	"app"
+	"storage/postgres/support"
+	"app/rest"
+	"storage/postgres"
+	"services"
 )
 
 func main() {
-	a := app.App{}
-	a.Initialize(
-		os.Getenv("APP_DB_USERNAME"),
+	pgDb := support.PostgresDB{}
+	pgDb.InitDB(os.Getenv("APP_DB_USERNAME"),
 		os.Getenv("APP_DB_PASSWORD"),
 		os.Getenv("APP_DB_NAME"))
+	productStorage := postgres.NewProductStorage(&pgDb)
+	productService := services.NewProductService(productStorage)
 
+	a := rest.NewApp(productService)
 	a.Run(":8080")
 }
